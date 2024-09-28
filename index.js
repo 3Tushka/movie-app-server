@@ -20,10 +20,14 @@ app.get("/", (req, res) => {
 });
 
 const PORT = process.env.PORT || 8080;
+const isDevelopment = process.env.NODE_ENV === 'development';
 
-db.sequelize.sync().then(() => {
+db.sequelize.sync({ force: isDevelopment }).then(() => {
   app.listen(PORT, () => {
     console.log(`\x1b[32mServer is running on port ${PORT}.\x1b[0m`);
+    if (isDevelopment) {
+      console.log(`\x1b[32mDatabase schema updated.\x1b[0m`);
+    }
   });
 }).catch(err => {
   console.error('Failed to initialize database:', err);
